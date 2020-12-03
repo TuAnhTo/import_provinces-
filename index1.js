@@ -1,8 +1,8 @@
 const mysql = require('mysql');
-const _  = require('lodash');
+const _ = require('lodash');
 
 
-const  connection = mysql.createConnection(
+const connection = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
@@ -17,34 +17,40 @@ connection.connect((error) => {
         console.log("db connected");
     }
 });
-connection.query('SELECT * FROM dev.provinces_test WHERE levelType = 1', function (err, result, fields) {
-    if (err) throw err;
-    console.log(result)
-});
+const main = async () => {
+    let sql = 'SELECT * FROM dev.provinces_test WHERE levelType = 1';
+    connection.query(sql, function (error, result) {
+        if (error) throw error;
+        // console.log(result);
+        _.each(result, async (provincesLevel1) => {
+            let id_original2 = _.get(provincesLevel1, 'id_original');
+            let name2 = _.get(provincesLevel1, 'name');
+            let name_translation2 = _.get(provincesLevel1, 'name_translation');
+            let zipcode2 = _.get(provincesLevel1, 'zipcode', 0);
+            if (zipcode2 === '') {
+                zipcode2 = 0;
+            }
+            let lat2 = _.get(provincesLevel1, 'lat');
+            let lng2 = _.get(provincesLevel1, 'lng');
 
-
-// let id_original2 = _.map(result, 'id_original');
-// let name2 = _.map(result, 'name_translation');
-// let name_translation2 = _.map(result, 'name_original');
-// let zipcode2 = _.map(result, 'zipcode', 0);
-// let lat2 = _.map(result, 'lat');
-// let lng2 = _.map(result, 'lng');
-//
-//
-//
-// let provinces = {
-//     id: id_original2,
-//     name_translation : name2,
-//     name_original: name_translation2,
-//     parent_id : 0,
-//     level : 1,
-//     country_code : 'CN',
-//     zipcode : zipcode2,
-//     lat : lat2,
-//     lng: lng2
-// };
-//
-//
-// console.log(provinces);
-//
-// let sql = 'insert into dev.provinces_dev set ?';
+            let provinces = {
+                id: id_original2,
+                name_translation: name2,
+                name_original: name_translation2,
+                parent_id: 0,
+                level: 1,
+                country_code: 'CN',
+                zipcode: zipcode2,
+                lat: lat2,
+                lng: lng2
+            };
+            console.log(zipcode2);
+            let sql2 = 'insert into dev.provinces_dev set ?';
+            connection.query(sql2, provinces, function (err, result) {
+                if (err) throw err;
+                console.log(' insert level 1 thanh cong');
+            });
+        })
+    });
+};
+main();

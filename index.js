@@ -50,7 +50,10 @@ fs.createReadStream('provinces-china.csv', 'utf8')
 
         };
         let sql = 'insert into dev.provinces_test set ?';
-        connection.query(sql, provinces)
+        connection.query(sql, provinces, function (err, result) {
+            if (err) throw err;
+            console.log('insert db thanh cong');
+        })
     })
     .on('end', function () {
         console.log("thanh cong");
