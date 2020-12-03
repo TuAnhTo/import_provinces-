@@ -21,35 +21,35 @@ const main = async () => {
     let sql = 'SELECT * FROM dev.provinces_test WHERE levelType = 1';
     connection.query(sql, function (error, result) {
         if (error) throw error;
-        // console.log(result);
         _.each(result, async (provincesLevel1) => {
-            let id_original2 = _.get(provincesLevel1, 'id_original');
-            let name2 = _.get(provincesLevel1, 'name');
-            let name_translation2 = _.get(provincesLevel1, 'name_translation');
-            let zipcode2 = _.get(provincesLevel1, 'zipcode', 0);
-            if (zipcode2 === '') {
-                zipcode2 = 0;
+            let id_original1 = _.get(provincesLevel1, 'id_original', null);
+            let name1 = _.get(provincesLevel1, 'name', null);
+            let name_translation1 = _.get(provincesLevel1, 'name_translation', null);
+            let zipcode1 = _.get(provincesLevel1, 'zipcode', null);
+            if (zipcode1 === '') {
+                zipcode1 = 0;
             }
-            let lat2 = _.get(provincesLevel1, 'lat');
-            let lng2 = _.get(provincesLevel1, 'lng');
+            let lat1 = _.get(provincesLevel1, 'lat', null);
+            let lng1 = _.get(provincesLevel1, 'lng', null);
 
             let provinces = {
-                id: id_original2,
-                name_translation: name2,
-                name_original: name_translation2,
+                id: id_original1,
+                name_translation: name1,
+                name_original: name_translation1,
                 parent_id: 0,
                 level: 1,
                 country_code: 'CN',
-                zipcode: zipcode2,
-                lat: lat2,
-                lng: lng2
+                zipcode: zipcode1,
+                lat: lat1,
+                lng: lng1
             };
-            console.log(zipcode2);
+            console.log(zipcode1);
             let sql2 = 'insert into dev.provinces_dev set ?';
             connection.query(sql2, provinces, function (err, result) {
                 if (err) throw err;
                 console.log(' insert level 1 thanh cong');
             });
+            console.log("---------------done--------------");
         })
     });
 };
